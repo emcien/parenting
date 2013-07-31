@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+require 'pry'
+require_relative '../lib/chores'
+
+# build a coordinator that allows 4 children at a time
+boss = Chores::Boss.new(2)
+
+['ls', 'ls -l /no', 'ls -a /', 'echo hello'].each do |cmd|
+  boss.add_chore({
+    :command    => cmd,
+    :on_success => lambda { STDERR.puts "#{cmd} succeeded" },
+    :on_failure => lambda { STDERR.puts "#{cmd} failed"    },
+    :on_stderr  => lambda { |ln| STDERR.puts "#{cmd} produced: #{ln}" }
+  })
+end
+
+boss.run!
