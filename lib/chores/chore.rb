@@ -3,11 +3,15 @@ module Chores
     attr_accessor :on_success, :on_failure, :on_stderr
     attr_accessor :command, :stdin, :stdout, :stderr
     attr_accessor :cost, :thread, :result
+    attr_accessor :deps, :name
 
     def initialize(opts)
       [:on_success, :on_failure, :on_stderr].each do |cb|
         self.send :"#{cb}=", opts.fetch(cb).dup
       end
+
+      self.name = opts[:name] || nil
+      self.deps = opts[:deps] || []
 
       self.command = opts.fetch(:command).dup
       self.command = [self.command] unless self.command.is_a? Array
@@ -16,6 +20,10 @@ module Chores
       self.stdout  = nil
       self.stderr  = Queue.new
       self.result  = :working
+    end
+
+    def satisfied?(completed)
+      self.deps.empty? || self.deps.all?{|d| completed.include?(d)}
     end
 
     def run!
@@ -54,6 +62,10 @@ module Chores
       else
         raise "This should not happen"
       end
+    end
+
+    def failed?
+      self.result == :failure
     end
   end
 end

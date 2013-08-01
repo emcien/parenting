@@ -1,11 +1,14 @@
+require 'set'
+
 module Chores
   class Boss
-    attr_accessor :max_children, :chores, :in_progress
+    attr_accessor :max_children, :chores, :in_progress, :completed
 
     def initialize(number_of_children)
       self.max_children = number_of_children
       self.chores = []
       self.in_progress = []
+      self.completed = Set.new
     end
 
     def add_chore(opts)
@@ -13,11 +16,16 @@ module Chores
     end
 
     def assign_next_chore
-      return unless self.chores.any?
+      return unless self.assignable_chores.any?
       return if self.in_progress.length >= self.max_children
 
-      next_chore = self.chores.shift
+      next_location = self.chores.find_index{|c| c.satisfied? self.completed }
+      if next_location.nil?
+        binding.pry
+      end
+      next_chore = self.chores.delete_at next_location
       next_chore.run!
+      puts "starting chore: #{next_chore.name}"
 
       self.in_progress << next_chore
     end
@@ -27,7 +35,7 @@ module Chores
     end
 
     def done?
-      self.chores.empty? && self.in_progress.empty?
+      self.assignable_chores.empty? && self.in_progress.empty?
     end
 
     def handle_complaints
@@ -42,7 +50,9 @@ module Chores
       remaining = []
       self.in_progress.each do |chore|
         if chore.complete?
+          puts "finished chore #{chore.name}"
           chore.handle_completion
+          self.completed << chore.name if chore.name and not chore.failed?
         else
           remaining << chore
         end
@@ -51,12 +61,18 @@ module Chores
       self.in_progress = remaining
     end
 
+    def assignable_chores
+      self.chores.select do |c|
+        c.satisfied? self.completed
+      end
+    end
+
     def run!
       # get the chores into longest job first - this is to minimize net runtime
       self.chores = self.chores.sort_by{|c| - c.cost.to_f}
 
       # queue up the first set of chores
-      while self.chores.any? and self.free_children?
+      while self.assignable_chores.any? and self.free_children?
         self.assign_next_chore
       end
 
@@ -67,7 +83,7 @@ module Chores
         self.handle_complaints
         self.check_children
 
-        while self.free_children? and self.chores.any?
+        while self.free_children? and self.assignable_chores.any?
           self.assign_next_chore
         end
       end
