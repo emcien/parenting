@@ -57,6 +57,12 @@ module Chores
       end
 
       self.in_progress = remaining
+
+      self.in_progress.each do |chore|
+        while chore.completed.any?
+          self.completed << chore.shift
+        end
+      end
     end
 
     def assignable_chores

@@ -3,7 +3,7 @@ module Chores
     attr_accessor :on_success, :on_failure, :on_stderr
     attr_accessor :command, :stdin, :stdout, :stderr
     attr_accessor :cost, :thread, :result
-    attr_accessor :deps, :name
+    attr_accessor :deps, :name, :completed
 
     def initialize(opts)
       [:on_success, :on_failure, :on_stderr].each do |cb|
@@ -12,6 +12,7 @@ module Chores
 
       self.name = opts[:name] || nil
       self.deps = opts[:deps] || []
+      self.completed = Queue.new
 
       self.command = opts.fetch(:command).dup
       self.command = [self.command] unless self.command.is_a? Array
@@ -52,6 +53,10 @@ module Chores
 
     def complete?
       self.result == :success || self.result == :failure
+    end
+
+    def done_with(name)
+      self.completed << name
     end
 
     def handle_completion
