@@ -25,7 +25,6 @@ module Chores
       end
       next_chore = self.chores.delete_at next_location
       next_chore.run!
-      puts "starting chore: #{next_chore.name}"
 
       self.in_progress << next_chore
     end
@@ -50,7 +49,6 @@ module Chores
       remaining = []
       self.in_progress.each do |chore|
         if chore.complete?
-          puts "finished chore #{chore.name}"
           chore.handle_completion
           self.completed << chore.name if chore.name and not chore.failed?
         else
