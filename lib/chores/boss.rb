@@ -20,9 +20,6 @@ module Chores
       return if self.in_progress.length >= self.max_children
 
       next_location = self.chores.find_index{|c| c.satisfied? self.completed }
-      if next_location.nil?
-        binding.pry
-      end
       next_chore = self.chores.delete_at next_location
       next_chore.run!
 
