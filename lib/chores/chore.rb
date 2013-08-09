@@ -1,6 +1,6 @@
 module Chores
   class Chore
-    attr_accessor :on_success, :on_failure, :on_stderr
+    attr_accessor :on_success, :on_failure, :on_stderr, :exit_status
     attr_accessor :command, :stdin, :stdout, :stderr
     attr_accessor :cost, :thread, :result
     attr_accessor :deps, :name, :completed
@@ -41,9 +41,10 @@ module Chores
           self.stdout = o.read
           o.close
 
-          exit_status = t.value
+          result = t.value
+          self.exit_status = result.exitstatus
 
-          if exit_status.success?
+          if result.success?
             self.result = :success
           else
             self.result = :failure
@@ -62,9 +63,9 @@ module Chores
 
     def handle_completion
       if self.result == :success
-        self.on_success.call
+        self.on_success.call(self)
       elsif self.result == :failure
-        self.on_failure.call
+        self.on_failure.call(self)
       else
         raise "This should not happen"
       end
