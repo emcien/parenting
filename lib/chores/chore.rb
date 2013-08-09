@@ -29,7 +29,8 @@ module Chores
 
     def run!
       self.thread = Thread.new do
-        Open3.popen3(* self.command) do |i, o, e, t|
+        cmd = [self.command].flatten
+        Open3.popen3(* cmd) do |i, o, e, t|
           i.write(self.stdin); i.close
 
           e.each_line do |line|
