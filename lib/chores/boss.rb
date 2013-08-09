@@ -59,7 +59,7 @@ module Chores
       self.in_progress = remaining
 
       self.in_progress.each do |chore|
-        while chore.completed.any?
+        until chore.completed.empty?
           self.completed << chore.shift
         end
       end
