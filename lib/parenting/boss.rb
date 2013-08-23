@@ -79,7 +79,7 @@ module Parenting
 
       # watch the children, and assign new chores if any get free
       until self.done?
-        sleep 0.25
+        sleep 0.05
 
         self.handle_complaints
         self.check_children
