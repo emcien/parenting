@@ -1,6 +1,6 @@
 require 'set'
 
-module Chores
+module Parenting
   class Boss
     attr_accessor :max_children, :chores, :in_progress, :completed
 
@@ -12,7 +12,7 @@ module Chores
     end
 
     def add_chore(opts)
-      self.chores << Chores::Chore.new(opts)
+      self.chores << Parenting::Chore.new(opts)
     end
 
     def assign_next_chore

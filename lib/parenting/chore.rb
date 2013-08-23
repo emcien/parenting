@@ -1,4 +1,4 @@
-module Chores
+module Parenting
   class Chore
     attr_accessor :on_success, :on_failure, :on_stderr, :exit_status
     attr_accessor :command, :stdin, :stdout, :stderr

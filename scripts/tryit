@@ -1,10 +1,9 @@
 #!/usr/bin/env ruby
 
-require 'pry'
-require_relative '../lib/chores'
+require_relative '../lib/parenting'
 
 # build a coordinator that allows 2 children at a time
-boss = Chores::Boss.new(2)
+boss = Parenting::Boss.new(2)
 
 boss.add_chore({
   :name       => "touch b",

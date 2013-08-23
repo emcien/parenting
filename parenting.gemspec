@@ -1,8 +1,8 @@
-require File.expand_path('../lib/chores/version', __FILE__)
+require File.expand_path('../lib/parenting/version', __FILE__)
 
 Gem::Specification.new do |s|
-  s.name            = "chores"
-  s.version         = Chores::VERSION
+  s.name            = "parenting"
+  s.version         = Parenting::VERSION
   s.date            = Time.now.utc.strftime('%Y-%m-%d')
   s.summary         = "Put those child-processes to WORK"
   s.description     = "Manage multiple child-processes via green threads"
@@ -10,12 +10,12 @@ Gem::Specification.new do |s|
   s.email           = "emueller@emcien.com"
   s.files           = [
     "README.md",
-    "lib/chores.rb",
-    "lib/chores/chore.rb",
-    "lib/chores/boss.rb",
-    "lib/chores/version.rb",
+    "lib/parenting.rb",
+    "lib/parenting/chore.rb",
+    "lib/parenting/boss.rb",
+    "lib/parenting/version.rb",
   ]
-  s.homepage        = "http://github.com/emcien/chores"
+  s.homepage        = "http://github.com/emcien/parenting"
   s.require_paths   = ['lib']
   s.bindir          = 'scripts'
 
