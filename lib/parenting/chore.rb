@@ -1,13 +1,18 @@
 module Parenting
   class Chore
-    attr_accessor :on_success, :on_failure, :on_stderr, :exit_status
+    attr_accessor :on_start, :on_success, :on_failure, :on_stderr, :exit_status
     attr_accessor :command, :stdin, :stdout, :stderr
     attr_accessor :cost, :thread, :result
     attr_accessor :deps, :name, :completed
 
     def initialize(opts)
-      [:on_success, :on_failure, :on_stderr].each do |cb|
-        self.send :"#{cb}=", opts.fetch(cb).dup
+      [:on_start, :on_success, :on_failure, :on_stderr].each do |cb|
+        if opts.key?(cb)
+          self.send :"#{cb}=", opts.fetch(cb).dup
+        else
+          # no-op
+          self.send :"#{cb}=", lambda {|o|}
+        end
       end
 
       self.name = opts[:name] || nil
@@ -28,6 +33,8 @@ module Parenting
     end
 
     def run!
+      self.on_start.call(self)
+
       self.thread = Thread.new do
         cmd = [self.command].flatten
         Open3.popen3(* cmd) do |i, o, e, t|

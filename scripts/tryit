@@ -27,6 +27,7 @@ boss.add_chore({
     :name       => cmd,
     :deps       => ["touch"],
     :command    => cmd,
+    :on_start   => lambda { |ch| STDERR.puts "#{cmd} starting" },
     :on_success => lambda { |ch| STDERR.puts "#{cmd} succeeded" },
     :on_failure => lambda { |ch| STDERR.puts "#{cmd} failed"    },
     :on_stderr  => lambda { |ln| STDERR.puts "#{cmd} produced: #{ln}" }
