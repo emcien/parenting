@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    parenting (0.1.4)
+    parenting (0.1.7)
 
 GEM
   remote: https://rubygems.org/
