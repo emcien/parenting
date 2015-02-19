@@ -6,8 +6,8 @@ Gem::Specification.new do |s|
   s.date            = Time.now.utc.strftime('%Y-%m-%d')
   s.summary         = "Put those child-processes to WORK"
   s.description     = "Manage multiple child-processes via green threads"
-  s.authors         = ["Eric Mueller"]
-  s.email           = "emueller@emcien.com"
+  s.authors         = ["Emcien"]
+  s.email           = "engineering@emcien.com"
   s.files           = [
     "README.md",
     "lib/parenting.rb",
